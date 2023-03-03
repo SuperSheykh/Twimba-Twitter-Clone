@@ -25,6 +25,7 @@ function render(){
         if (tweet.replies.length){
             tweet.replies.forEach(function(reply){
                 repliesHtml += `
+                    
                     <div class="tweet-inner">
                         <img src="${reply.profilePic}" class="profile-pic">
                         <div>
@@ -61,6 +62,19 @@ function render(){
             </div>
         </div>
         <div class="tweet-reply hidden" id="reply-${tweet.uuid}">
+            <div class="tweet-inner">
+                <img src="images/scrimbalogo.png" class="profile-pic">
+                <div>
+                    <textarea 
+                    class="new-reply" 
+                    id="btn-${tweet.uuid}"
+                    placeholder="Your reply here"
+                    ></textarea>
+                    <button 
+                    data-btn="btn-${tweet.uuid}"
+                    >Reply</button>
+                </div>
+            </div>
             ${repliesHtml}
         </div>
 
@@ -85,6 +99,8 @@ document.addEventListener('click', function(e){
         handleReplyBtnClick(e.target.dataset.reply)
     } else if(e.target.id === 'tweet-btn'){
         createNewTweet()
+    } else if (e.target.dataset.btn){
+        newReplyTweet(e.target.dataset.btn)
     }
     
 })
@@ -126,7 +142,6 @@ function handleReplyBtnClick(x){
 }
 
 function createNewTweet(){
-    console.log('Im creating a new tweet..')
 if (newTweetInput.value){
     const newTweet = {
         handle: `@scrimba 💎`,
@@ -143,4 +158,25 @@ if (newTweetInput.value){
     render()
 }
     
+}
+
+function newReplyTweet(x){
+    console.log('I was called!')
+    const inputTweet = document.getElementById(x)
+    console.log(inputTweet.value)
+
+    if(inputTweet.value){
+    const newTweet = {
+            handle: `@scrimba`,
+            profilePic: `images/scrimbalogo.png`,
+            tweetText: `${inputTweet.value}`
+        }
+
+    const targetTweet = tweetsData.filter(function(tweet){
+        if (x === `btn-${tweet.uuid}`){
+            return tweet
+        }
+    })[0]
+    targetTweet.replies.unshift(newTweet)
+}
 }
